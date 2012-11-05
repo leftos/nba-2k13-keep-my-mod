@@ -1,1 +1,1 @@
-"D:\Program Files\WinSCP\winscp.com" /command "option batch abort" "option confirm off" "open aslanoglou@diogenisHTML" "put ""C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\version.txt"" /home/aslanoglou/public_html/" "exit"
+"E:\Program Files (x86)\WinSCP\winscp.com" /command "option batch abort" "option confirm off" "open tellas" "put ""E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\kmm13version.txt"" /" "exit"

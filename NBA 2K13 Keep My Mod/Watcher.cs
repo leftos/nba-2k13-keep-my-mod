@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Controls;
 using System.Threading;
 
-namespace NBA_2K12_Keep_My_Mod
+namespace NBA_2K13_Keep_My_Mod
 {
     class Watcher
     {

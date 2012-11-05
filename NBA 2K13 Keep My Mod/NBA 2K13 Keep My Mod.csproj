@@ -8,8 +8,8 @@
     <ProjectGuid>{6D49F9D9-30ED-43A7-8F9A-D9601CDB2225}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NBA_2K12_Keep_My_Mod</RootNamespace>
-    <AssemblyName>NBA 2K12 Keep My Mod</AssemblyName>
+    <RootNamespace>NBA_2K13_Keep_My_Mod</RootNamespace>
+    <AssemblyName>NBA 2K13 Keep My Mod</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>NBA 2K12.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\NLSC.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>C7DB373C6C173183E9576DC6CC10E5035340D7A4</ManifestCertificateThumbprint>
@@ -68,7 +68,7 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>NBA_2K12_Keep_My_Mod.App</StartupObject>
+    <StartupObject>NBA_2K13_Keep_My_Mod.App</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -97,6 +97,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="LeftosCommonLibrary.cs" />
     <Compile Include="ODWindow.xaml.cs">
       <DependentUpon>ODWindow.xaml</DependentUpon>
     </Compile>
@@ -142,16 +143,18 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="app.manifest" />
-    <None Include="NBA 2K12 Keep My Mod_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <Resource Include="NBA 2K12.ico" />
+    <None Include="Resources\NLSC.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="sample.modlist">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -185,8 +188,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"D:\Program Files\Inno Setup 5\ISCC.exe" "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\InnoSetup\setup.iss"
-"D:\Program Files\WinRAR\rar.exe" a -ep "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\[Leftos] NBA 2K12 Keep My Mod.rar" "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\NBA 2K12 Keep My Mod.exe" "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\NBA 2K12 Keep My Mod.pdb" "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\Readme.txt"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>

@@ -1,8 +1,11 @@
-﻿NBA 2K12 Keep My Mod
+﻿NBA 2K13 Keep My Mod
 	by Lefteris "Leftos" Aslanoglou
 
+	Additional credits:
+		- solovoy from the NLSC forums
 
-Starting with NBA 2K12, 2K implemented a way to update game art and text 
+
+Starting with NBA 2K13, 2K implemented a way to update game art and text 
 (actually, any game file) silently, without the need for a patch. However, the 
 files 2K updates this way override any mods the user has installed, and there's 
 no easy way for the user to make sure his mods override 2K's updates.
@@ -14,7 +17,7 @@ won't get overridden/replaced by 2K's updates.
 ===================================================
 DISCLAIMER
 The tool is still in beta, so use it at your own risk. Make sure to keep 
-a full backup of your NBA 2K12 folder inside %appdata%\2K Sports, in 
+a full backup of your NBA 2K13 folder inside %appdata%\2K Sports, in 
 case something goes wrong. 
  
 When you edit the Roster.ROS file, ALWAYS save the edited Roster in a 
@@ -22,7 +25,7 @@ file WITH A DIFFERENT NAME! The Roster.ROS gets updated by 2K whenever
 there's an official update, and this tool FORCES the update. 
 
 So, two tips:
-1. Always keep a backup of %appdata%\2K Sports\NBA 2K12. Always, always, ALWAYS.
+1. Always keep a backup of %appdata%\2K Sports\NBA 2K13. Always, always, ALWAYS.
 2. When you want to edit the official Roster, always create a copy of it 
 first with a different name, and always save to that file. Saving to the 
 Roster.ROS file is unreliable even without my tool, but you're 
@@ -37,8 +40,20 @@ Instructions
 		assistance from you. Just keep it running while you're playing the game.
 		Make sure you read the rest of the readme though, for more things you 
 		can do.
+		
+		Quick note though, to avoid having the game resync its updates when
+		you quit a game and return to the Main Menu (which takes about 10-15
+		minutes during which you don't have the Online Data updates, such as the
+		new shoes), remember this:
+		- When you're about to enter a game, Alt-Tab into the tool and click
+		   on Force Keep My Mods.
+		- When you're about to quit a game and return to the Main Menu, Alt-Tab
+		   into the tool, and click on Restore Online Data Backup.
+		If you remember to do these two things, you'll always have both your
+		mods and the rest of 2K's updates, without having to wait through the
+		lengthy update.
 
-		If you want to temporarily disable the tool and keep 2K's updates,
+		If you want to temporarily disable the tool and only keep 2K's updates,
 		for example to synchronize NBA Today or to go Online, click on Restore
 		Online Data Backup. After you do that, the tool won't watch for re-syncs
 		and won't force your mods, until you use the "Force Keep My Mods"
@@ -71,7 +86,7 @@ Instructions
 			NOTE 3: Make sure you always run the tool BEFORE you start the game.
 			The tool goes through some preparations when it starts to make sure
 			the game updates and that everything goes well; its behaviour if
-			started while NBA 2K12 is running hasn't been tested and may cause
+			started while NBA 2K13 is running hasn't been tested and may cause
 			the game to crash.
 
 			NOTE 3.1: Since v0.1.5, the tool will start even while the game's
@@ -232,91 +247,17 @@ Instructions
 		mod's files are in the Keep My Mods column, you've done	it correctly.
 
 Version History
-	v0.2 - Jan 9
-		- Now Online Data Browser shows all files in modlists but not yet 
-		   updated
-		- Whenever the game completes a re-sync, the log should show if new 
-		   files have been updated by 2K, or if an already existing update has 
-		   been updated again; in that case the program uses the Windows "Beep" 
-		   sound to inform the user
-		- Fixed various scenarios that would cause the tool to crash
+	v0.1.0.2
+		- Fixed bug which launched the NBA 2K12 Steam version instead of 2K13
 
-	v0.1.6.1 - Jan 5
-		- Tool will now ignore any files that are in modlists but have not yet 
-		   been updated by 2K, thus accelerating the program's use when a lot of 
-		   files have been added in modlists, and minimizing copy operations
+	v0.1.0.1
+		- Fixed crash when choosing Yes to an overwrite prompt
 
-	v0.1.5.5 - Jan 2
-		- Tool will now start even if the game's running, but won't hide the
-		   rosters, thus avoiding causing any problems to the game; note that
-		   this is still an experimental feature
-		- Manual features "Restore Online Data Backup" and "Force Keep My Mods"
-		   will now work at all times; previously the tool would crash as it 
-		   wouldn't handle some scenarios
-		- "Restore Online Data Backup" now temporarily disables the tool's
-		   automatic features, namely watching for re-syncs and forcing your
-		   mods again; read note 6 for more information
-		- "Force Keep My Mods" now re-enables the tool's automatic features
-		   if they were disabled by "Restore Online Data Backup"; read NOTE 6
-		   for more information
-		- Added a small "Re-syncing..." prompt below the Online Data Browser 
-		   button that informs users that a re-sync is taking place; this can be
-		   used along with "Restore Online Data Backup" to let the user know 
-		   when they can access NBA Today, Online, and the rest of the features 
-		   that can't be used during a re-sync; see notes 6 and 6.1 for more
-		   information
-		- The tool now reports whether its automatic capabilities are enabled
-		   or disabled, right above the log
-
-	v0.1.4 beta12 - Dec 30
-		- Tool now checks for the game's constants re-syncs of Online Data and
-		   overwrites 2K's conflicting updates with the user's mods after every
-		   re-sync
-		- Tool will try to keep mods even during the re-sync
-		- Added checks so that no more than one instance of the tool will run
-		   at the same time
-		- Added check so that the tool can't be started if the game's already
-		   running
-		- Fixed bug that made the tool incompatible with non-Steam installations
-		   of NBA 2K12, causing the tool to crash on startup with a
-		   NullReferenceException error.
-
-	v0.1.3 beta - Dec 27
-		- Tool now keeps backup of Online Data when replacing 2K's updates with
-		   mods
-		- Added option to restore backup of Online Data, in order to avoid having
-		   to wait while the game re-syncs the whole Online Data folder; that's
-		   because whenever the game can't verify a download in the Online Data
-		   folder (e.g. if it's been corrupted or replaced with a mod), it will
-		   freak out, delete the whole Online Data folder and download everything
-		   from scratch, instead of re-downloading only the offending file
-		- The Online Data backup, if available, is automatically restored when the
-		   tool starts for the reasons explained above
-		- Improved error checking around the application; should now avoid some
-		   crashes
-		- Improved error logging; crash logs now contain much more useful
-		   information for me to try to find the bug that's causing them
-		- Fixed other minor bugs
-
-	v0.1.2 beta - Dec 27
-		- Added "Create Modlist" option, which allows you to select your mod's
-		   files and let the tool create and load the modlist for you.
-		- Fixed UI elements' positioning in Online Data Browser
-		- Fixed bug that made the program parse the whitelist
-		   (AllowUpdates.modlist) twice
-		- Fixed Log auto-scrolling downwards even though new entries are
-		   inserted at the top
-		- Added Readme window that displays this file
-
-	v0.1.1 beta - Dec 27
-		- Fixed major startup bug
-		- Improved error checking throughout the application
-
-	v0.1 beta - Dec 26
+	v0.1
 		- Initial release
 
 Troubleshooting
 	You can ask me for help whether you're a user or a modder on the tool's 
 	thread in the NBA Live Series Center forums.
 
-	URL: http://forums.nba-live.com/viewtopic.php?f=143&t=83896
+	URL: http://forums.nba-live.com/viewtopic.php?f=149&t=88654

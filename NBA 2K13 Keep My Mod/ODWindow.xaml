@@ -1,7 +1,7 @@
-﻿<Window x:Class="NBA_2K12_Keep_My_Mod.ODWindow"
+﻿<Window x:Class="NBA_2K13_Keep_My_Mod.ODWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Online Data Browser" Height="318" Width="876" Name="odW">
+        Title="Online Data Browser" Height="318" Width="876" Name="odW" Icon="pack://siteoforigin:,,,/Resources/NLSC.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="29" />

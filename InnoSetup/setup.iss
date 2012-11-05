@@ -29,7 +29,7 @@
 ;#define use_sql2005express
 ;#define use_sql2008express
 
-#define MyAppSetupName 'NBA 2K12 Keep My Mod'
+#define MyAppSetupName 'NBA 2K13 Keep My Mod'
 #define MyAppVersion ''
 #define MyAppVerInfo ''
 
@@ -47,7 +47,7 @@ AppSupportURL=http://forums.nba-live.com/viewtopic.php?f=143&t=83896
 OutputBaseFilename=[Leftos] {#MyAppSetupName} {#MyAppVersion} {#MyAppVerInfo}
 DefaultGroupName={#MyAppSetupName}
 DefaultDirName={pf}\{#MyAppSetupName}
-UninstallDisplayIcon={app}\NBA 2K12 Keep My Mod.exe
+UninstallDisplayIcon={app}\NBA 2K13 Keep My Mod.exe
 OutputDir=..
 SourceDir=.
 AllowNoIcons=yes
@@ -66,18 +66,17 @@ Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-Source: "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\NBA 2K12 Keep My Mod.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\sample.modlist"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
-Source: "C:\Users\Leftos\Documents\Visual Studio 2010\Projects\NBA 2K12 Keep My Mod\NBA 2K12 Keep My Mod\bin\Release\NBA 2K12 Keep My Mod.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion; Excludes: "*.vshost.*"
+Source: "E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod\bin\Release\Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
+Source: "E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod\bin\Release\Resources\*"; DestDir: "{app}\Resources"; Flags: ignoreversion
 
 [Icons]
-Name: "{group}\NBA 2K12 Keep My Mod"; Filename: "{app}\NBA 2K12 Keep My Mod.exe"; WorkingDir: "{app}"; IconFilename: "{app}\NBA 2K12 Keep My Mod.exe"
-Name: "{group}\{cm:UninstallProgram,NBA 2K12 Keep My Mod}"; Filename: "{uninstallexe}"
-Name: "{commondesktop}\NBA 2K12 Keep My Mod"; Filename: "{app}\NBA 2K12 Keep My Mod.exe"; WorkingDir: "{app}"; IconFilename: "{app}\NBA 2K12 Keep My Mod.exe"; Tasks: desktopicon
+Name: "{group}\NBA 2K13 Keep My Mod"; Filename: "{app}\NBA 2K13 Keep My Mod.exe"; WorkingDir: "{app}"; IconFilename: "{app}\NBA 2K13 Keep My Mod.exe"
+Name: "{group}\{cm:UninstallProgram,NBA 2K13 Keep My Mod}"; Filename: "{uninstallexe}"
+Name: "{commondesktop}\NBA 2K13 Keep My Mod"; Filename: "{app}\NBA 2K13 Keep My Mod.exe"; WorkingDir: "{app}"; IconFilename: "{app}\NBA 2K13 Keep My Mod.exe"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\NBA 2K12 Keep My Mod.exe"; WorkingDir: "{app}"; Flags: nowait postinstall runascurrentuser skipifsilent; Description: "{cm:LaunchProgram,NBA 2K12 Keep My Mod}"
+Filename: "{app}\NBA 2K13 Keep My Mod.exe"; WorkingDir: "{app}"; Flags: nowait postinstall runascurrentuser skipifsilent; Description: "{cm:LaunchProgram,NBA 2K13 Keep My Mod}"
 
 #include "scripts\products.iss"
 
@@ -176,7 +175,10 @@ win_sp_title=Windows %1 Service Pack %2
 Type: filesandordirs; Name: "{app}"
 
 [Registry]
-Root: "HKCU"; Subkey: "Software\NBA 2K12 Keep My Mod"; Flags: uninsdeletekey
+Root: "HKCU"; Subkey: "Software\NBA 2K13 Keep My Mod"; Flags: uninsdeletekey
+
+[Dirs]
+Name: "{app}\Resources"
 
 [Code]
 function InitializeSetup(): boolean;

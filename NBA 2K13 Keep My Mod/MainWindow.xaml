@@ -1,9 +1,8 @@
-﻿<Window x:Class="NBA_2K12_Keep_My_Mod.MainWindow"
+﻿<Window x:Class="NBA_2K13_Keep_My_Mod.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Name="mainW"
-        Icon="NBA 2K12.ico"
-        Title="NBA 2K12 Keep My Mod - Lefteris &quot;Leftos&quot; Aslanoglou" Height="538" Width="825">
+        Title="NBA 2K13 Keep My Mod - Lefteris &quot;Leftos&quot; Aslanoglou" Height="538" Width="825" Icon="pack://siteoforigin:,,,/Resources/NLSC.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="195*" />

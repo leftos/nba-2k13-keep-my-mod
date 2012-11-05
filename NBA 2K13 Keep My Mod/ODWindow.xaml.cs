@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 
-namespace NBA_2K12_Keep_My_Mod
+namespace NBA_2K13_Keep_My_Mod
 {
     /// <summary>
     /// Interaction logic for ODWindow.xaml
