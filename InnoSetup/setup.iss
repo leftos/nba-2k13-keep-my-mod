@@ -68,7 +68,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod\bin\Release\*"; DestDir: "{app}"; Flags: ignoreversion; Excludes: "*.vshost.*"
 Source: "E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod\bin\Release\Readme.txt"; DestDir: "{app}"; Flags: ignoreversion isreadme
-Source: "E:\Development\Visual Studio 2010\Projects\NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod\bin\Release\Resources\*"; DestDir: "{app}\Resources"; Flags: ignoreversion
 
 [Icons]
 Name: "{group}\NBA 2K13 Keep My Mod"; Filename: "{app}\NBA 2K13 Keep My Mod.exe"; WorkingDir: "{app}"; IconFilename: "{app}\NBA 2K13 Keep My Mod.exe"
@@ -175,7 +174,8 @@ win_sp_title=Windows %1 Service Pack %2
 Type: filesandordirs; Name: "{app}"
 
 [Registry]
-Root: "HKCU"; Subkey: "Software\NBA 2K13 Keep My Mod"; Flags: uninsdeletekey
+Root: "HKCU"; Subkey: "Software\NBA 2K13 Keep My Mod"; Flags: deletekey dontcreatekey uninsdeletekey
+Root: "HKCU"; Subkey: "Software\Lefteris Aslanoglou\NBA 2K13 Keep My Mod"; Flags: uninsdeletekey
 
 [Dirs]
 Name: "{app}\Resources"

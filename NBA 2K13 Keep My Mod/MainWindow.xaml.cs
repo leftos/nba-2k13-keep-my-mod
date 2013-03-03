@@ -67,6 +67,9 @@ namespace NBA_2K13_Keep_My_Mod
 
             AppPath = Environment.CurrentDirectory + "\\";
 
+            Tools.AppName = "NBA 2K13 Keep My Mod";
+            Tools.AppRegistryKey = @"SOFTWARE\Lefteris Aslanoglou\NBA 2K13 Keep My Mod";
+
             /*
             if (IsProcessOpen(Process.GetCurrentProcess().ProcessName))
             {
@@ -322,8 +325,8 @@ namespace NBA_2K13_Keep_My_Mod
             {
                 App.errorReport(ex, "Registry.CurrentUser");
             }
-
-            if ((rk = rk.OpenSubKey(@"SOFTWARE\2K Sports\NBA 2K13")) == null)
+            rk = rk.OpenSubKey(@"SOFTWARE\2K Sports\NBA 2K13");
+            if (rk == null)
             {
                 MessageBox.Show(
                     "NBA 2K13 doesn't seem to be installed in this computer/for this user.\nThe required registry entries could not be found.");
@@ -332,7 +335,12 @@ namespace NBA_2K13_Keep_My_Mod
 
             try
             {
-                InstallationPath = rk.GetValue("Install Dir") + @"\";
+                var installDir = rk.GetValue("Install Dir");
+                if (installDir == null)
+                {
+                    throw new Exception("Registry value not found.");
+                }
+                InstallationPath = installDir + @"\";
             }
             catch (Exception ex)
             {
@@ -342,10 +350,11 @@ namespace NBA_2K13_Keep_My_Mod
                 try
                 {
                     rk2 = Registry.CurrentUser;
-                    if ((rk2 = rk2.OpenSubKey(@"SOFTWARE\NBA 2K13 Keep My Mod", true)) == null)
+                    rk2 = rk2.OpenSubKey(Tools.AppRegistryKey, true);
+                    if (rk2 == null)
                     {
                         rk2 = Registry.CurrentUser;
-                        rk2.CreateSubKey(@"SOFTWARE\NBA 2K13 Keep My Mod");
+                        rk2.CreateSubKey(Tools.AppRegistryKey);
                         needToSet = true;
                     }
                     else

@@ -31,24 +31,24 @@ namespace NBA_2K13_Keep_My_Mod
                 f.WriteLine();
                 f.WriteLine();
                 f.Close();
+
+                if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess)
+                {
+                    var log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
+                    NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.CopyTo(log, 0);
+                    //File.WriteAllLines(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog_unh.txt", log);
+                    File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt", log);
+                }
+                MessageBox.Show(
+                    "NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " +
+                    NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
+
+                Process.Start(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Can't create errorlog!\n\n" + ex + "\n\n" + ex.InnerException);
             }
-
-            if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess)
-            {
-                var log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
-                NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.CopyTo(log, 0);
-                //File.WriteAllLines(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog_unh.txt", log);
-                File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt", log);
-            }
-            MessageBox.Show(
-                "NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " +
-                NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
-
-            Process.Start(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
 
             // Prevent default unhandled exception processing
             e.Handled = true;
@@ -78,25 +78,25 @@ namespace NBA_2K13_Keep_My_Mod
                 f.WriteLine();
                 f.WriteLine();
                 f.Close();
+
+                if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess)
+                {
+                    var log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
+                    NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.CopyTo(log, 0);
+                    //File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog.txt", log);
+                    File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt", log);
+                }
+                MessageBox.Show(
+                    "NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " +
+                    NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt");
+
+                Process.Start(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Can't create errorlog!\n\n" + ex + "\n\n" +
                                 (e.InnerException == null ? "None" : e.InnerException.Message));
             }
-
-            if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess)
-            {
-                var log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
-                NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.CopyTo(log, 0);
-                //File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog.txt", log);
-                File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt", log);
-            }
-            MessageBox.Show(
-                "NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " +
-                NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt");
-
-            Process.Start(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
 
             Environment.Exit(-1);
         }
