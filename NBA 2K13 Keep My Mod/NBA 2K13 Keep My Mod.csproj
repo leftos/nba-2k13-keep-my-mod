@@ -106,9 +106,6 @@
     <Compile Include="ODWindow.xaml.cs">
       <DependentUpon>ODWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Readme.xaml.cs">
-      <DependentUpon>Readme.xaml</DependentUpon>
-    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -123,10 +120,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ODWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Readme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
