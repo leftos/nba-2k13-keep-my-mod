@@ -47,5 +47,7 @@
                 Name="btnRestoreOD" VerticalAlignment="Top" Width="187" Grid.Column="1" Click="btnRestoreOD_Click" />
         <Label Grid.Column="1" Grid.Row="1" Height="28" HorizontalAlignment="Right" Margin="0,1,12,0"
                Name="lblResyncStatus" VerticalAlignment="Top" HorizontalContentAlignment="Right" />
+        <Button Content="License" Height="23" HorizontalAlignment="Left" Margin="12,40,0,0" x:Name="btnLicense"
+        	VerticalAlignment="Top" Width="86" Click="btnLicense_Click" />
     </Grid>
 </Window>

@@ -1215,5 +1215,10 @@ namespace NBA_2K13_Keep_My_Mod
                 return;
             }
         }
+
+        private void btnLicense_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("notepad", AppPath + @"\LICENSE");
+        }
     }
 }
