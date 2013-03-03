@@ -4,6 +4,6 @@
              StartupUri="MainWindow.xaml"
              DispatcherUnhandledException="App_DispatcherUnhandledException">
     <Application.Resources>
-         
+
     </Application.Resources>
 </Application>

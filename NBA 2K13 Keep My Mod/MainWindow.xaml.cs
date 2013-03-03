@@ -1,30 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Media;
+using System.Net;
+using System.Reflection;
+using System.Security.Permissions;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
-using System.Security.Permissions;
-using Microsoft.Win32;
-using System.Reflection;
-using System.Diagnostics;
-using System.Net;
-using System.ComponentModel;
 using System.Windows.Threading;
 using LeftosCommonLibrary;
+using Microsoft.Win32;
 
 namespace NBA_2K13_Keep_My_Mod
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -53,12 +46,12 @@ namespace NBA_2K13_Keep_My_Mod
         public static List<string> _allmods = new List<string>();
         public static List<string> _ignoredmods = new List<string>();
 
-        private Watcher cacheWatcher;
-        private Watcher savesWatcher;
-        private Watcher odWatcher;
-        private static bool paused = false;
+        private static bool paused;
 
         public static long oldsize = 0;
+        private readonly Watcher cacheWatcher;
+        private readonly Watcher odWatcher;
+        private readonly Watcher savesWatcher;
 
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         public MainWindow()
@@ -88,7 +81,7 @@ namespace NBA_2K13_Keep_My_Mod
 
             bootSuccess = true;
 
-            insertInList("NBA 2K13 Keep My Mod - version " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+            insertInList("NBA 2K13 Keep My Mod - version " + Assembly.GetExecutingAssembly().GetName().Version);
 
             getPaths();
 
@@ -123,7 +116,7 @@ namespace NBA_2K13_Keep_My_Mod
             }
 
             // Create a Timer with a Normal Priority
-            DispatcherTimer _timer = new DispatcherTimer();
+            var _timer = new DispatcherTimer();
 
             // Set the Interval to 2 seconds
             _timer.Interval = TimeSpan.FromMilliseconds(3000);
@@ -131,110 +124,117 @@ namespace NBA_2K13_Keep_My_Mod
             // Set the callback to just show the time ticking away
             // NOTE: We are using a control so this has to run on 
             // the UI thread
-            _timer.Tick += new EventHandler(delegate(object s, EventArgs a)
-            {
-                try
+            _timer.Tick += delegate
                 {
-                    if (isGameRunning())
+                    try
                     {
-                        if (Directory.Exists(CachePath + "patches"))
+                        if (isGameRunning())
                         {
-                            long fullsize = -1;
-                            int count = 0;
-                            try
+                            if (Directory.Exists(CachePath + "patches"))
                             {
-                                StreamReader tr = new StreamReader(AppDocsPath + "2Konlinedata_crc.hist");
-                                while (tr.Peek() > -1)
+                                long fullsize = -1;
+                                int count = 0;
+                                try
                                 {
-                                    tr.ReadLine();
-                                    count++;
-                                }
-                                count--;
-                                tr.BaseStream.Seek(0, SeekOrigin.Begin);
-                                string[] lastline = textTail(tr, 1);
-                                string[] lparts = lastline[0].Split('\t');
-                                if (lparts.Length == 1) fullsize = Convert.ToInt32(lparts[0]);
-                                tr.Close();
-                            }
-                            catch
-                            {
-                            }
-                            string[] patchfiles = Directory.GetFiles(CachePath + "patches");
-                            long b = 0;
-                            foreach (string f in patchfiles)
-                            {
-                                FileInfo fi = new FileInfo(f);
-                                b += fi.Length;
-                            }
-                            int speed = (int)((b - oldsize) / 1024 / 3);
-                            lblResyncStatus.Content = "Re-syncing... (" + patchfiles.Length;
-                            if (count > 0)
-                            {
-                                lblResyncStatus.Content += "/" + count.ToString();
-                            }
-                            lblResyncStatus.Content += " files, " + String.Format("{0:F1}", ((float)b / 1024 / 1024));
-                            if (fullsize > -1)
-                            {
-                                lblResyncStatus.Content += "/" + String.Format("{0:F1}", ((float)fullsize / 1024 / 1024));
-                            }
-                            lblResyncStatus.Content += "MB downloaded";
-                            if (oldsize > 0)
-                            {
-                                lblResyncStatus.Content += ", " + speed.ToString() + "KB/s";
-                                if (fullsize > 0)
-                                {
-                                    if (b < fullsize)
+                                    var tr = new StreamReader(AppDocsPath + "2Konlinedata_crc.hist");
+                                    while (tr.Peek() > -1)
                                     {
-                                        if (speed > 0)
+                                        tr.ReadLine();
+                                        count++;
+                                    }
+                                    count--;
+                                    tr.BaseStream.Seek(0, SeekOrigin.Begin);
+                                    string[] lastline = textTail(tr, 1);
+                                    string[] lparts = lastline[0].Split('\t');
+                                    if (lparts.Length == 1)
+                                    {
+                                        fullsize = Convert.ToInt32(lparts[0]);
+                                    }
+                                    tr.Close();
+                                }
+                                catch
+                                {
+                                }
+                                string[] patchfiles = Directory.GetFiles(CachePath + "patches");
+                                long b = 0;
+                                foreach (string f in patchfiles)
+                                {
+                                    var fi = new FileInfo(f);
+                                    b += fi.Length;
+                                }
+                                var speed = (int) ((b - oldsize)/1024/3);
+                                lblResyncStatus.Content = "Re-syncing... (" + patchfiles.Length;
+                                if (count > 0)
+                                {
+                                    lblResyncStatus.Content += "/" + count.ToString();
+                                }
+                                lblResyncStatus.Content += " files, " + String.Format("{0:F1}", ((float) b/1024/1024));
+                                if (fullsize > -1)
+                                {
+                                    lblResyncStatus.Content += "/" + String.Format("{0:F1}", ((float) fullsize/1024/1024));
+                                }
+                                lblResyncStatus.Content += "MB downloaded";
+                                if (oldsize > 0)
+                                {
+                                    lblResyncStatus.Content += ", " + speed.ToString() + "KB/s";
+                                    if (fullsize > 0)
+                                    {
+                                        if (b < fullsize)
                                         {
-                                            lblResyncStatus.Content += ", ";
-                                            int minutes = (int)((fullsize - b) / 1024 / speed / 60);
-                                            int seconds = (int)((fullsize - b) / 1024 / speed % 60);
-                                            if (minutes > 0)
+                                            if (speed > 0)
                                             {
-                                                lblResyncStatus.Content += minutes.ToString() + " minutes ";
+                                                lblResyncStatus.Content += ", ";
+                                                var minutes = (int) ((fullsize - b)/1024/speed/60);
+                                                var seconds = (int) ((fullsize - b)/1024/speed%60);
+                                                if (minutes > 0)
+                                                {
+                                                    lblResyncStatus.Content += minutes.ToString() + " minutes ";
+                                                }
+                                                lblResyncStatus.Content += seconds.ToString() + " seconds remaining";
                                             }
-                                            lblResyncStatus.Content += seconds.ToString() + " seconds remaining";
                                         }
                                     }
                                 }
+                                lblResyncStatus.Content += ")";
+                                oldsize = b;
                             }
-                            lblResyncStatus.Content += ")";
-                            oldsize = b;
+                            else
+                            {
+                                lblResyncStatus.Content = "";
+                                oldsize = 0;
+                            }
                         }
                         else
                         {
                             lblResyncStatus.Content = "";
-                            oldsize = 0;
+                            if (Directory.Exists(CachePath + "patches"))
+                            {
+                                Directory.Delete(CachePath + "patches", true);
+                            }
                         }
                     }
-                    else
+                    catch
                     {
-                        lblResyncStatus.Content = "";
-                        if (Directory.Exists(CachePath + "patches")) Directory.Delete(CachePath + "patches", true);
                     }
-                }
-                catch
-                { }
-            });
+                };
 
             // Start the timer
             _timer.Start();
 
-            BackgroundWorker w = new BackgroundWorker();
-            w.DoWork += delegate(object sender, DoWorkEventArgs args)
-            {
-                checkForUpdates();
-            };
+            var w = new BackgroundWorker();
+            w.DoWork += delegate
+                {
+                    checkForUpdates();
+                };
             w.RunWorkerAsync();
 
             //App.errorReport(new Exception());
         }
 
-        ///<summary>Returns the end of a text reader.</summary>
-        ///<param name="reader">The reader to read from.</param>
-        ///<param name="lineCount">The number of lines to return.</param>
-        ///<returns>The last lneCount lines from the reader.</returns>
+        /// <summary>Returns the end of a text reader.</summary>
+        /// <param name="reader">The reader to read from.</param>
+        /// <param name="lineCount">The number of lines to return.</param>
+        /// <returns>The last lneCount lines from the reader.</returns>
         public static string[] textTail(TextReader reader, int lineCount)
         {
             var buffer = new List<string>(lineCount);
@@ -242,20 +242,30 @@ namespace NBA_2K13_Keep_My_Mod
             for (int i = 0; i < lineCount; i++)
             {
                 line = reader.ReadLine();
-                if (line == null) return buffer.ToArray();
+                if (line == null)
+                {
+                    return buffer.ToArray();
+                }
                 buffer.Add(line);
             }
 
-            int lastLine = lineCount - 1;           //The index of the last line read from the buffer.  Everything > this index was read earlier than everything <= this indes
+            int lastLine = lineCount - 1;
+                //The index of the last line read from the buffer.  Everything > this index was read earlier than everything <= this indes
 
             while (null != (line = reader.ReadLine()))
             {
                 lastLine++;
-                if (lastLine == lineCount) lastLine = 0;
+                if (lastLine == lineCount)
+                {
+                    lastLine = 0;
+                }
                 buffer[lastLine] = line;
             }
 
-            if (lastLine == lineCount - 1) return buffer.ToArray();
+            if (lastLine == lineCount - 1)
+            {
+                return buffer.ToArray();
+            }
             var retVal = new string[lineCount];
             buffer.CopyTo(lastLine + 1, retVal, 0, lineCount - lastLine - 1);
             buffer.CopyTo(0, retVal, lineCount - lastLine - 1, lastLine + 1);
@@ -264,8 +274,14 @@ namespace NBA_2K13_Keep_My_Mod
 
         private bool isGameRunning()
         {
-            if (IsProcessOpen("nba2k13")) return true;
-            else return false;
+            if (IsProcessOpen("nba2k13"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool IsProcessOpen(string name)
@@ -309,13 +325,14 @@ namespace NBA_2K13_Keep_My_Mod
 
             if ((rk = rk.OpenSubKey(@"SOFTWARE\2K Sports\NBA 2K13")) == null)
             {
-                MessageBox.Show("NBA 2K13 doesn't seem to be installed in this computer/for this user.\nThe required registry entries could not be found.");
+                MessageBox.Show(
+                    "NBA 2K13 doesn't seem to be installed in this computer/for this user.\nThe required registry entries could not be found.");
                 Environment.Exit(-1);
             }
 
             try
             {
-                InstallationPath = rk.GetValue("Install Dir").ToString() + @"\";
+                InstallationPath = rk.GetValue("Install Dir") + @"\";
             }
             catch (Exception ex)
             {
@@ -348,17 +365,19 @@ namespace NBA_2K13_Keep_My_Mod
                     App.errorReport(ex2, "Finding installation path of NBA 2K13 through KMM's own entry.");
                 }
 
-                if (needToSet == true)
+                if (needToSet)
                 {
-                    OpenFileDialog ofd = new OpenFileDialog();
+                    var ofd = new OpenFileDialog();
                     ofd.Filter = "NBA2K13.exe|nba2K13.exe";
-                    ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + @"\2K Sports\NBA 2K13";
+                    ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) +
+                                           @"\2K Sports\NBA 2K13";
                     if (ofd.InitialDirectory == "")
                     {
-                        ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\2K Sports\NBA 2K13";
+                        ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                                               @"\2K Sports\NBA 2K13";
                         if (ofd.InitialDirectory == "")
                         {
-                            string [] parts = Environment.CurrentDirectory.Split('\\');
+                            string[] parts = Environment.CurrentDirectory.Split('\\');
                             ofd.InitialDirectory = parts[0] + @"\Games\NBA 2K13";
                             if (ofd.InitialDirectory == "")
                             {
@@ -371,14 +390,15 @@ namespace NBA_2K13_Keep_My_Mod
 
                     if (ofd.FileName == "")
                     {
-                        MessageBox.Show("You need to point the tool to the folder you've installed NBA 2K13.\n\nIt can't work otherwise.\n\nPlease restart the tool and try again.");
+                        MessageBox.Show(
+                            "You need to point the tool to the folder you've installed NBA 2K13.\n\nIt can't work otherwise.\n\nPlease restart the tool and try again.");
                         rk.Close();
                         rk2.Close();
                         Environment.Exit(-1);
                     }
 
                     string fname = ofd.FileName;
-                    string [] parts2 = fname.Split('\\');
+                    string[] parts2 = fname.Split('\\');
                     fname = fname.Substring(0, fname.Length - parts2[parts2.Length - 1].Length);
                     InstallationPath = fname;
                     rk2.SetValue("NBA 2K13 Installation Path", InstallationPath);
@@ -466,15 +486,21 @@ namespace NBA_2K13_Keep_My_Mod
             if (fileList.Length > 0)
             {
                 if (orige.Equals("ROS") && newe.Equals("CRB"))
+                {
                     insertInList("Backing up any additional custom rosters...");
+                }
             }
             foreach (string cur in fileList)
             {
                 string newFilename = cur.Substring(0, cur.Length - 3) + newe;
                 if (File.Exists(newFilename))
                 {
-                    MessageBoxResult result = MessageBox.Show(newFilename + " already exists. Are you sure you want to overwrite it?", "NBA 2K13 Keep My Mod", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                    if (result == MessageBoxResult.No) continue;
+                    MessageBoxResult result = MessageBox.Show(newFilename + " already exists. Are you sure you want to overwrite it?",
+                                                              "NBA 2K13 Keep My Mod", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                    if (result == MessageBoxResult.No)
+                    {
+                        continue;
+                    }
                     File.Delete(newFilename);
                 }
                 File.Move(cur, newFilename);
@@ -484,13 +510,17 @@ namespace NBA_2K13_Keep_My_Mod
         private void btnStartSteam_Click(object sender, RoutedEventArgs e)
         {
             string steamUrl = "steam://rungameid/219600";
-            ProcessStartInfo _processStartInfo = new ProcessStartInfo();
+            var _processStartInfo = new ProcessStartInfo();
             _processStartInfo.WorkingDirectory = InstallationPath;
 
             if (InstallationPath.Contains("steamapps"))
+            {
                 _processStartInfo.FileName = steamUrl;
+            }
             else
+            {
                 _processStartInfo.FileName = InstallationPath + "nba2K13.exe";
+            }
 
             restoreOnlineData(onGameStart: true);
 
@@ -501,7 +531,6 @@ namespace NBA_2K13_Keep_My_Mod
             }
 
             Process myProcess = Process.Start(_processStartInfo);
-
         }
 
         private void btnRestoreOriginal_Click(object sender, RoutedEventArgs e)
@@ -539,7 +568,7 @@ namespace NBA_2K13_Keep_My_Mod
         {
             if (Directory.Exists(OnlineDataPath + @"downloads\"))
             {
-                ODWindow odw = new ODWindow();
+                var odw = new ODWindow();
                 odw.ShowDialog();
             }
             else
@@ -551,14 +580,14 @@ namespace NBA_2K13_Keep_My_Mod
         public static void readModLists()
         {
             string[] _modlists = Directory.GetFiles(KMMPath, "*.modlist");
-            MainWindow.insertInList("Found " + _modlists.Length + " modlists.");
+            insertInList("Found " + _modlists.Length + " modlists.");
 
             _keptmods.Clear();
             _allowedmods.Clear();
             _allmods.Clear();
             _ignoredmods.Clear();
 
-            string[] odfiles = new string[]{""};
+            var odfiles = new[] {""};
             try
             {
                 odfiles = Directory.GetFiles(OnlineDataPath + "downloads");
@@ -574,9 +603,13 @@ namespace NBA_2K13_Keep_My_Mod
 
             foreach (string modlist in _modlists)
             {
-                if (modlist.Contains("AllowUpdates.modlist")) { continue; };
+                if (modlist.Contains("AllowUpdates.modlist"))
+                {
+                    continue;
+                }
+                ;
 
-                MainWindow.insertInList("Parsing " + modlist + "...");
+                insertInList("Parsing " + modlist + "...");
                 string[] _temp = File.ReadAllLines(modlist);
                 foreach (string mod in _temp)
                 {
@@ -598,7 +631,7 @@ namespace NBA_2K13_Keep_My_Mod
             string[] _allowed;
             try
             {
-                MainWindow.insertInList("Parsing allowed 2K updates (AllowUpdates.modlist)...");
+                insertInList("Parsing allowed 2K updates (AllowUpdates.modlist)...");
                 _allowed = File.ReadAllLines(KMMPath + "AllowUpdates.modlist");
             }
             catch
@@ -614,21 +647,24 @@ namespace NBA_2K13_Keep_My_Mod
                     _allowedmods.Add(mod);
                 }
             }
-            MainWindow.insertInList(_allmods.Count.ToString() + " unique game files parsed, " + _keptmods.Count.ToString() + " to be kept modded, " + _allowedmods.Count.ToString() + " to be replaced by 2K's updates, " + _ignoredmods.Count.ToString() + " ignored because they haven't been updated by 2K.");
+            insertInList(_allmods.Count.ToString() + " unique game files parsed, " + _keptmods.Count.ToString() +
+                         " to be kept modded, " + _allowedmods.Count.ToString() + " to be replaced by 2K's updates, " +
+                         _ignoredmods.Count.ToString() + " ignored because they haven't been updated by 2K.");
         }
 
         private List<string> findNew()
         {
-            string[] odFiles = Directory.GetFiles(MainWindow.OnlineDataPath + @"downloads\");
+            string[] odFiles = Directory.GetFiles(OnlineDataPath + @"downloads\");
 
-            List<string> newFiles = new List<string>();
+            var newFiles = new List<string>();
 
             foreach (string cur in odFiles)
             {
                 string[] parts = cur.Split('\\');
                 string curName = parts[parts.Length - 1];
-                if (File.Exists(MainWindow.InstallationPath + curName))
-                { }
+                if (File.Exists(InstallationPath + curName))
+                {
+                }
                 else
                 {
                     newFiles.Add(curName);
@@ -711,16 +747,17 @@ namespace NBA_2K13_Keep_My_Mod
                 }
 
                 enableAllWatchers();
-            }            
+            }
         }
 
         private int UpdateMNF()
         {
             try
             {
-                FileStream fs = new FileStream(OnlineDataPath + @"downloads\downloads.mnf", FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                BinaryReader br = new BinaryReader(fs, Encoding.ASCII);
-                BinaryWriter bw = new BinaryWriter(fs, Encoding.ASCII);
+                var fs = new FileStream(OnlineDataPath + @"downloads\downloads.mnf", FileMode.Open, FileAccess.ReadWrite,
+                                        FileShare.ReadWrite);
+                var br = new BinaryReader(fs, Encoding.ASCII);
+                var bw = new BinaryWriter(fs, Encoding.ASCII);
                 foreach (string mod in _keptmods)
                 {
                     br.BaseStream.Position = 4; // Skip CRC
@@ -740,7 +777,7 @@ namespace NBA_2K13_Keep_My_Mod
                             bw.BaseStream.Position = br.BaseStream.Position;
                             byte[] ba = BitConverter.GetBytes(Convert.ToInt32(new FileInfo(InstallationPath + mod).Length));
                             bw.Write(ba);
-                            byte[] crc = Tools.ReverseByteOrder(Tools.StringToByteArray(getCRC(InstallationPath + mod)), 4);
+                            byte[] crc = Tools.ReverseByteOrder(Tools.HexStringToByteArray(getCRC(InstallationPath + mod)), 4);
                             bw.Write(crc);
                             insertInList("Kept " + mod);
                             done = true;
@@ -752,16 +789,17 @@ namespace NBA_2K13_Keep_My_Mod
                     }
                 }
                 //bw.Close();
-                BinaryWriter bw2 = new BinaryWriter(File.Open(AppDocsPath + "temp.mnf", FileMode.Create));
+                var bw2 = new BinaryWriter(File.Open(AppDocsPath + "temp.mnf", FileMode.Create));
                 br.BaseStream.Position = 4;
-                byte[] buf = br.ReadBytes((int)br.BaseStream.Length - 4);
+                byte[] buf = br.ReadBytes((int) br.BaseStream.Length - 4);
                 bw2.Write(buf);
                 bw2.Close();
-                byte[] crc2 = Tools.ReverseByteOrder(Tools.StringToByteArray(getCRC(AppDocsPath + "temp.mnf")), 4);
+                byte[] crc2 = Tools.ReverseByteOrder(Tools.HexStringToByteArray(getCRC(AppDocsPath + "temp.mnf")), 4);
                 br.Close();
                 bw.Close();
                 fs.Close();
-                bw = new BinaryWriter(File.Open(OnlineDataPath + @"downloads\downloads.mnf", FileMode.Open, FileAccess.Write), Encoding.ASCII);
+                bw = new BinaryWriter(File.Open(OnlineDataPath + @"downloads\downloads.mnf", FileMode.Open, FileAccess.Write),
+                                      Encoding.ASCII);
                 bw.Write(crc2);
                 bw.Write(buf);
                 bw.Close();
@@ -777,27 +815,35 @@ namespace NBA_2K13_Keep_My_Mod
 
         private static void enableAllWatchers()
         {
-            MainWindow.mwInstance.odWatcher.enableEvents();
-            MainWindow.mwInstance.savesWatcher.enableEvents();
-            MainWindow.mwInstance.cacheWatcher.enableEvents();
+            mwInstance.odWatcher.enableEvents();
+            mwInstance.savesWatcher.enableEvents();
+            mwInstance.cacheWatcher.enableEvents();
             insertInList("All watchers enabled!");
-            MainWindow.mwInstance.lblLog.Content = "Log (Automatic capabilities: ON)";
+            mwInstance.lblLog.Content = "Log (Automatic capabilities: ON)";
         }
 
         /// <summary>
-        /// Copy a folder (non-recursive, overwrites destination folder if it exists)
+        ///     Copy a folder (non-recursive, overwrites destination folder if it exists)
         /// </summary>
         /// <param name="srcDir">Source directory</param>
         /// <param name="destDir">Destination directory</param>
         public static void copyFolder(string srcDir, string destDir)
         {
             if (Directory.Exists(destDir))
+            {
                 Directory.Delete(destDir, true);
-                
+            }
+
             Directory.CreateDirectory(destDir);
 
-            if (srcDir[srcDir.Length - 1] != '\\') srcDir += '\\';
-            if (destDir[destDir.Length - 1] != '\\') destDir += '\\';
+            if (srcDir[srcDir.Length - 1] != '\\')
+            {
+                srcDir += '\\';
+            }
+            if (destDir[destDir.Length - 1] != '\\')
+            {
+                destDir += '\\';
+            }
 
             string[] files = Directory.GetFiles(srcDir);
             foreach (string f in files)
@@ -830,20 +876,25 @@ namespace NBA_2K13_Keep_My_Mod
 
                 insertInList("Checking for changes in 2K's updates...");
                 string log = AppDocsPath + "2Konlinedata_crc.hist";
-                if (Directory.Exists(AppDocsPath) == false) Directory.CreateDirectory(AppDocsPath);
+                if (Directory.Exists(AppDocsPath) == false)
+                {
+                    Directory.CreateDirectory(AppDocsPath);
+                }
                 if (File.Exists(log) == false)
                 {
                     saveOnlineDataInfo();
                     return;
                 }
-                Dictionary<string, string> data = new Dictionary<string, string>();
-                StreamReader sr = new StreamReader(log);
+                var data = new Dictionary<string, string>();
+                var sr = new StreamReader(log);
                 while (sr.Peek() > -1)
                 {
                     string line = sr.ReadLine();
                     string[] parts = line.Split('\t');
                     if (parts.Length == 2)
+                    {
                         data.Add(parts[0], parts[1]);
+                    }
                 }
                 sr.Close();
                 bool found = false;
@@ -857,7 +908,9 @@ namespace NBA_2K13_Keep_My_Mod
                         {
                             insertInList("UPDATE! " + getSafeFilename(f) + " has been updated by 2K!");
                             if (_keptmods.Contains(getSafeFilename(f)))
+                            {
                                 insertInList("You have opted to keep " + getSafeFilename(f) + " modded.");
+                            }
                             found = true;
                             updFiles++;
                         }
@@ -866,17 +919,20 @@ namespace NBA_2K13_Keep_My_Mod
                     {
                         insertInList("NEW FILE! " + getSafeFilename(f) + " is a new update by 2K!");
                         if (_keptmods.Contains(getSafeFilename(f)))
+                        {
                             insertInList("You have opted to keep " + getSafeFilename(f) + " modded.");
+                        }
                         found = true;
                         newFiles++;
                     }
                 }
-                if (found) 
+                if (found)
                 {
-                    insertInList("ONLINE DATA UPDATE: " + newFiles.ToString() + " new files, " + updFiles.ToString() + " files updated!");
-                    System.Media.SystemSounds.Beep.Play();
+                    insertInList("ONLINE DATA UPDATE: " + newFiles.ToString() + " new files, " + updFiles.ToString() +
+                                 " files updated!");
+                    SystemSounds.Beep.Play();
                 }
-                else 
+                else
                 {
                     insertInList("No changes to Online Data detected.");
                 }
@@ -889,7 +945,7 @@ namespace NBA_2K13_Keep_My_Mod
             try
             {
                 string[] odfiles = Directory.GetFiles(SaveRootPath + @"ODBackup\");
-                StreamWriter sw = new StreamWriter(AppDocsPath + "2Konlinedata_crc.hist");
+                var sw = new StreamWriter(AppDocsPath + "2Konlinedata_crc.hist");
                 long size = 0;
                 foreach (string f in odfiles)
                 {
@@ -910,12 +966,16 @@ namespace NBA_2K13_Keep_My_Mod
 
         private static String getCRC(string filename)
         {
-            Crc32 crc32 = new Crc32();
+            var crc32 = new Crc32();
             String hash = String.Empty;
 
             using (FileStream fs = File.Open(filename, FileMode.Open))
+            {
                 foreach (byte b in crc32.ComputeHash(fs))
+                {
                     hash += b.ToString("x2").ToLower();
+                }
+            }
             return hash;
         }
 
@@ -951,7 +1011,7 @@ namespace NBA_2K13_Keep_My_Mod
         {
             readModLists();
 
-            string[] log = new string[lstLog.Items.Count];
+            var log = new string[lstLog.Items.Count];
             lstLog.Items.CopyTo(log, 0);
             File.WriteAllLines(UserDekstopPath + "KeepMyMods_Log.txt", log);
 
@@ -963,33 +1023,39 @@ namespace NBA_2K13_Keep_My_Mod
 
         public static void insertInList(string s)
         {
-            MainWindow.mwInstance.lstLog.Items.Insert(0, DateTime.Now.ToLongTimeString() + " - " + s);
+            mwInstance.lstLog.Items.Insert(0, DateTime.Now.ToLongTimeString() + " - " + s);
         }
 
         private void btnReadme_Click(object sender, RoutedEventArgs e)
         {
-            ReadmeW rw = new ReadmeW();
+            var rw = new ReadmeW();
             rw.ShowDialog();
         }
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog fd = new OpenFileDialog();
+            var fd = new OpenFileDialog();
             fd.Multiselect = true;
             fd.InitialDirectory = InstallationPath;
             fd.ShowDialog();
 
-            if (fd.FileNames.Length == 0) return;
+            if (fd.FileNames.Length == 0)
+            {
+                return;
+            }
 
-            SaveFileDialog fs = new SaveFileDialog();
+            var fs = new SaveFileDialog();
             fs.Filter = "Keep My Mod Modlist (*.modlist)|*.modlist";
             fs.InitialDirectory = KMMPath;
             fs.AddExtension = true;
             fs.ShowDialog();
 
-            if (string.IsNullOrEmpty(fs.FileName)) return;
+            if (string.IsNullOrEmpty(fs.FileName))
+            {
+                return;
+            }
 
-            StreamWriter sw = new StreamWriter(fs.FileName);
+            var sw = new StreamWriter(fs.FileName);
             foreach (string f in fd.SafeFileNames)
             {
                 sw.WriteLine(f);
@@ -997,19 +1063,22 @@ namespace NBA_2K13_Keep_My_Mod
             sw.Close();
 
             insertInList("Successfully created and saved " + fs.SafeFileName);
-            Environment.CurrentDirectory = MainWindow.AppPath;
+            Environment.CurrentDirectory = AppPath;
             readModLists();
         }
 
         private void btnRestoreOD_Click(object sender, RoutedEventArgs e)
         {
             restoreOnlineData();
-            insertInList("NOTE: Tool will not watch for re-syncs or force your mods until you use \"Force Keep My Mods\", or \"Hide Rosters\".");
+            insertInList(
+                "NOTE: Tool will not watch for re-syncs or force your mods until you use \"Force Keep My Mods\", or \"Hide Rosters\".");
             paused = true;
             if (Directory.Exists(CachePath + "patches"))
             {
-                insertInList("NOTE: You may have to wait for the current re-sync to finish until you can access NBA Today, Online, or other features.");
-                insertInList("NOTE: Watch for the \"Re-syncing...\" prompt under the Online Data browser button. When it disappears, you're good to go.");
+                insertInList(
+                    "NOTE: You may have to wait for the current re-sync to finish until you can access NBA Today, Online, or other features.");
+                insertInList(
+                    "NOTE: Watch for the \"Re-syncing...\" prompt under the Online Data browser button. When it disappears, you're good to go.");
             }
         }
 
@@ -1036,17 +1105,23 @@ namespace NBA_2K13_Keep_My_Mod
                 insertInList("No original Online Data backup found. Online Data should be the original.");
             }
 
-            if (onBoot) enableAllWatchers();
-            else if (onGameStart && !paused) enableAllWatchers();
+            if (onBoot)
+            {
+                enableAllWatchers();
+            }
+            else if (onGameStart && !paused)
+            {
+                enableAllWatchers();
+            }
         }
 
         private static void disableAllWatchers()
         {
-            MainWindow.mwInstance.odWatcher.disableEvents();
-            MainWindow.mwInstance.savesWatcher.disableEvents();
-            MainWindow.mwInstance.cacheWatcher.disableEvents();
+            mwInstance.odWatcher.disableEvents();
+            mwInstance.savesWatcher.disableEvents();
+            mwInstance.cacheWatcher.disableEvents();
             insertInList("All watchers disabled!");
-            MainWindow.mwInstance.lblLog.Content = "Log (Automatic capabilities: OFF)";
+            mwInstance.lblLog.Content = "Log (Automatic capabilities: OFF)";
         }
 
         private static void checkForUpdates()
@@ -1054,8 +1129,8 @@ namespace NBA_2K13_Keep_My_Mod
             //insertInList("Checking for updates...");
             try
             {
-                WebClient webClient = new WebClient();
-                webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(Completed);
+                var webClient = new WebClient();
+                webClient.DownloadFileCompleted += Completed;
                 //webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
                 webClient.DownloadFileAsync(new Uri("http://users.tellas.gr/~aslan16/kmm13version.txt"), AppDocsPath + @"version.txt");
             }
@@ -1082,17 +1157,22 @@ namespace NBA_2K13_Keep_My_Mod
                 updateInfo = File.ReadAllLines(AppDocsPath + @"version.txt");
                 versionParts = updateInfo[0].Split('.');
                 string[] curVersionParts = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.');
-                int[] iVP = new int[versionParts.Length];
-                int[] iCVP = new int[versionParts.Length];
+                var iVP = new int[versionParts.Length];
+                var iCVP = new int[versionParts.Length];
                 bool found = false;
                 for (int i = 0; i < versionParts.Length; i++)
                 {
                     iVP[i] = Convert.ToInt32(versionParts[i]);
                     iCVP[i] = Convert.ToInt32(curVersionParts[i]);
-                    if (iCVP[i] > iVP[i]) break;
+                    if (iCVP[i] > iVP[i])
+                    {
+                        break;
+                    }
                     if (iVP[i] > iCVP[i])
                     {
-                        MessageBoxResult mbr = MessageBox.Show("A new version is available! Would you like to download it?", "NBA 2K13 Keep My Mod", MessageBoxButton.YesNo, MessageBoxImage.Information);
+                        MessageBoxResult mbr = MessageBox.Show("A new version is available! Would you like to download it?",
+                                                               "NBA 2K13 Keep My Mod", MessageBoxButton.YesNo,
+                                                               MessageBoxImage.Information);
                         found = true;
                         if (mbr == MessageBoxResult.Yes)
                         {
@@ -1110,5 +1190,4 @@ namespace NBA_2K13_Keep_My_Mod
             }
         }
     }
-
 }

@@ -1,30 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
+using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
-using System.Diagnostics;
 
 namespace NBA_2K13_Keep_My_Mod
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    ///     Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
-        void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Add code to output the exception details to a message box/event log/log file,   etc.
             // Be sure to include details about any inner exceptions
             try
             {
-                if (Directory.Exists(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath) == false) Directory.CreateDirectory(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath);
-                StreamWriter f = new StreamWriter(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
+                if (Directory.Exists(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath) == false)
+                {
+                    Directory.CreateDirectory(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath);
+                }
+                var f = new StreamWriter(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
                 //StreamWriter f = new StreamWriter(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog_unh.txt");
 
                 f.Write(e.Exception.ToString());
@@ -37,17 +34,19 @@ namespace NBA_2K13_Keep_My_Mod
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't create errorlog!\n\n" + ex.ToString() + "\n\n" + ex.InnerException.ToString());
+                MessageBox.Show("Can't create errorlog!\n\n" + ex + "\n\n" + ex.InnerException);
             }
 
-            if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess == true)
+            if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess)
             {
-                string[] log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
+                var log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
                 NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.CopyTo(log, 0);
                 //File.WriteAllLines(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog_unh.txt", log);
                 File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt", log);
             }
-            MessageBox.Show("NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " + NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
+            MessageBox.Show(
+                "NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " +
+                NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
 
             Process.Start(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
 
@@ -64,9 +63,12 @@ namespace NBA_2K13_Keep_My_Mod
             try
             {
                 //StreamWriter f = new StreamWriter(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog.txt");
-                if (Directory.Exists(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath) == false) Directory.CreateDirectory(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath);
-                StreamWriter f = new StreamWriter(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt");
-                
+                if (Directory.Exists(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath) == false)
+                {
+                    Directory.CreateDirectory(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath);
+                }
+                var f = new StreamWriter(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt");
+
                 f.WriteLine("Additional: " + additional);
                 f.WriteLine();
                 f.Write(e.ToString());
@@ -79,17 +81,20 @@ namespace NBA_2K13_Keep_My_Mod
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Can't create errorlog!\n\n" + ex.ToString() + "\n\n" + (e.InnerException == null ? "None" : e.InnerException.Message));
+                MessageBox.Show("Can't create errorlog!\n\n" + ex + "\n\n" +
+                                (e.InnerException == null ? "None" : e.InnerException.Message));
             }
 
-            if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess == true)
+            if (NBA_2K13_Keep_My_Mod.MainWindow.bootSuccess)
             {
-                string[] log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
+                var log = new string[NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.Count];
                 NBA_2K13_Keep_My_Mod.MainWindow.mwInstance.lstLog.Items.CopyTo(log, 0);
                 //File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.SaveRootPath + @"\errorlog.txt", log);
                 File.AppendAllLines(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt", log);
             }
-            MessageBox.Show("NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " + NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt");
+            MessageBox.Show(
+                "NBA 2K13 Keep My Mod encountered a critical error and will be terminated.\n\nAn Error Log has been saved at " +
+                NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog.txt");
 
             Process.Start(NBA_2K13_Keep_My_Mod.MainWindow.AppDocsPath + @"errorlog_unh.txt");
 
@@ -105,7 +110,7 @@ namespace NBA_2K13_Keep_My_Mod
             {
                 // If ther is more than one, than it is already running.
                 MessageBox.Show("Application is already running.");
-                Application.Current.Shutdown();
+                Current.Shutdown();
                 return;
             }
 

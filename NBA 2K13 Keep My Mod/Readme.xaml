@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Readme" Height="401" Width="559" Name="readmeW" Loaded="readmeW_Loaded" ResizeMode="NoResize">
     <Grid>
-        <TextBox HorizontalAlignment="Stretch" Name="txtReadme" VerticalAlignment="Stretch" IsReadOnly="True" VerticalScrollBarVisibility="Auto" />
+        <TextBox HorizontalAlignment="Stretch" Name="txtReadme" VerticalAlignment="Stretch" IsReadOnly="True"
+                 VerticalScrollBarVisibility="Auto" />
     </Grid>
 </Window>

@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.ComponentModel;
 using System.IO;
+using System.Windows;
 
 namespace NBA_2K13_Keep_My_Mod
 {
     /// <summary>
-    /// Interaction logic for ODWindow.xaml
+    ///     Interaction logic for ODWindow.xaml
     /// </summary>
     public partial class ODWindow : Window
     {
@@ -23,10 +13,10 @@ namespace NBA_2K13_Keep_My_Mod
         {
             InitializeComponent();
 
-            lstNew.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Content", System.ComponentModel.ListSortDirection.Ascending));
-            lstKeep.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Content", System.ComponentModel.ListSortDirection.Ascending));
-            lstUpdates.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Content", System.ComponentModel.ListSortDirection.Ascending));
-            lstIgnored.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Content", System.ComponentModel.ListSortDirection.Ascending));
+            lstNew.Items.SortDescriptions.Add(new SortDescription("Content", ListSortDirection.Ascending));
+            lstKeep.Items.SortDescriptions.Add(new SortDescription("Content", ListSortDirection.Ascending));
+            lstUpdates.Items.SortDescriptions.Add(new SortDescription("Content", ListSortDirection.Ascending));
+            lstIgnored.Items.SortDescriptions.Add(new SortDescription("Content", ListSortDirection.Ascending));
 
             populateLists();
         }
@@ -36,15 +26,15 @@ namespace NBA_2K13_Keep_My_Mod
             string[] odFiles = Directory.GetFiles(MainWindow.OnlineDataPath + @"downloads\");
 
             MainWindow.readModLists();
-            
+
             foreach (string cur in odFiles)
             {
-                string [] parts = cur.Split('\\');
+                string[] parts = cur.Split('\\');
                 string curName = parts[parts.Length - 1];
                 if (File.Exists(MainWindow.InstallationPath + curName))
                 {
                     bool kept = MainWindow._keptmods.Contains(curName);
-                    if (kept == true)
+                    if (kept)
                     {
                         lstKeep.Items.Add(curName);
                     }
@@ -67,7 +57,7 @@ namespace NBA_2K13_Keep_My_Mod
 
         private void btnUseMod_Click(object sender, RoutedEventArgs e)
         {
-            string[] _list = new string[lstUpdates.SelectedItems.Count];
+            var _list = new string[lstUpdates.SelectedItems.Count];
             lstUpdates.SelectedItems.CopyTo(_list, 0);
             foreach (string item in _list)
             {
@@ -78,7 +68,7 @@ namespace NBA_2K13_Keep_My_Mod
 
         private void btnKeepUpdate_Click(object sender, RoutedEventArgs e)
         {
-            string[] _list = new string[lstKeep.SelectedItems.Count];
+            var _list = new string[lstKeep.SelectedItems.Count];
             lstKeep.SelectedItems.CopyTo(_list, 0);
             foreach (string item in _list)
             {
@@ -90,7 +80,7 @@ namespace NBA_2K13_Keep_My_Mod
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
             saveKeepMods();
-            this.Close();
+            Close();
         }
 
         private void saveKeepMods()
@@ -101,17 +91,14 @@ namespace NBA_2K13_Keep_My_Mod
             }
             finally
             {
-                string[] _list = new string[lstKeep.Items.Count];
+                var _list = new string[lstKeep.Items.Count];
                 lstKeep.Items.CopyTo(_list, 0);
                 File.WriteAllLines(MainWindow.KMMPath + "KeepMyMods.modlist", _list);
 
-                string[] _updates = new string[lstUpdates.Items.Count];
+                var _updates = new string[lstUpdates.Items.Count];
                 lstUpdates.Items.CopyTo(_updates, 0);
                 File.WriteAllLines(MainWindow.KMMPath + "AllowUpdates.modlist", _updates);
             }
         }
-
-
-
     }
 }
