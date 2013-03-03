@@ -145,6 +145,9 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="app.manifest" />
+    <Content Include="LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -159,7 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Readme.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -186,8 +189,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>copy "$(ProjectDir)Readme.txt" "$(SolutionDir)Readme.txt"
+copy "$(ProjectDir)LICENSE" "$(SolutionDir)LICENSE"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
