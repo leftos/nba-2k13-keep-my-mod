@@ -42,15 +42,12 @@ namespace NBA_2K13_Keep_My_Mod
         public static MainWindow mwInstance;
         public static bool bootSuccess = false;
         public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\";
-        public static string MyDocsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\";
-        public static string AppDocsPath = MyDocsPath + @"NBA 2K13 Keep My Mod\";
         public static string SaveRootPath;
         public static string SavesPath;
         public static string OnlineDataPath;
         public static string CachePath;
 
         public static string InstallationPath;
-        public static string KMMPath;
 
         public static string UserDekstopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory) + @"\";
 
@@ -77,11 +74,6 @@ namespace NBA_2K13_Keep_My_Mod
             try
             {
                 InitializeComponent();
-            }
-            catch (Exception ex)
-            {
-                App.errorReport(ex, "MainWindow InitializeComponent");
-            }
 
             AppPath = Environment.CurrentDirectory + "\\";
 
@@ -157,7 +149,7 @@ namespace NBA_2K13_Keep_My_Mod
                                 int count = 0;
                                 try
                                 {
-                                    var tr = new StreamReader(AppDocsPath + "2Konlinedata_crc.hist");
+                                    var tr = new StreamReader(App.AppDocsPath + "2Konlinedata_crc.hist");
                                     while (tr.Peek() > -1)
                                     {
                                         tr.ReadLine();
@@ -249,7 +241,12 @@ namespace NBA_2K13_Keep_My_Mod
                 };
             w.RunWorkerAsync();
 
-            //App.errorReport(new Exception());
+                //App.errorReport(new Exception());
+            }
+            catch (Exception ex)
+            {
+                App.errorReport(ex, "MainWindow InitializeComponent");
+            }
         }
 
         /// <summary>Returns the end of a text reader.</summary>
@@ -816,12 +813,12 @@ namespace NBA_2K13_Keep_My_Mod
                     }
                 }
                 //bw.Close();
-                var bw2 = new BinaryWriter(File.Open(AppDocsPath + "temp.mnf", FileMode.Create));
+                var bw2 = new BinaryWriter(File.Open(App.AppDocsPath + "temp.mnf", FileMode.Create));
                 br.BaseStream.Position = 4;
                 byte[] buf = br.ReadBytes((int) br.BaseStream.Length - 4);
                 bw2.Write(buf);
                 bw2.Close();
-                byte[] crc2 = Tools.ReverseByteOrder(Tools.HexStringToByteArray(getCRC(AppDocsPath + "temp.mnf")), 4);
+                byte[] crc2 = Tools.ReverseByteOrder(Tools.HexStringToByteArray(getCRC(App.AppDocsPath + "temp.mnf")), 4);
                 br.Close();
                 bw.Close();
                 fs.Close();
@@ -902,10 +899,10 @@ namespace NBA_2K13_Keep_My_Mod
                 }
 
                 insertInList("Checking for changes in 2K's updates...");
-                string log = AppDocsPath + "2Konlinedata_crc.hist";
-                if (Directory.Exists(AppDocsPath) == false)
+                string log = App.AppDocsPath + "2Konlinedata_crc.hist";
+                if (Directory.Exists(App.AppDocsPath) == false)
                 {
-                    Directory.CreateDirectory(AppDocsPath);
+                    Directory.CreateDirectory(App.AppDocsPath);
                 }
                 if (File.Exists(log) == false)
                 {
@@ -972,7 +969,7 @@ namespace NBA_2K13_Keep_My_Mod
             try
             {
                 string[] odfiles = Directory.GetFiles(SaveRootPath + @"ODBackup\");
-                var sw = new StreamWriter(AppDocsPath + "2Konlinedata_crc.hist");
+                var sw = new StreamWriter(App.AppDocsPath + "2Konlinedata_crc.hist");
                 long size = 0;
                 foreach (string f in odfiles)
                 {
@@ -1076,7 +1073,7 @@ namespace NBA_2K13_Keep_My_Mod
             fs.AddExtension = true;
             fs.ShowDialog();
 
-            if (string.IsNullOrEmpty(fs.FileName))
+            if (String.IsNullOrEmpty(fs.FileName))
             {
                 return;
             }
@@ -1158,7 +1155,7 @@ namespace NBA_2K13_Keep_My_Mod
                 var webClient = new WebClient();
                 webClient.DownloadFileCompleted += Completed;
                 //webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                webClient.DownloadFileAsync(new Uri("http://users.tellas.gr/~aslan16/kmm13version.txt"), AppDocsPath + @"version.txt");
+                webClient.DownloadFileAsync(new Uri("http://users.tellas.gr/~aslan16/kmm13version.txt"), App.AppDocsPath + @"version.txt");
             }
             catch (Exception ex)
             {
@@ -1180,7 +1177,7 @@ namespace NBA_2K13_Keep_My_Mod
             string[] versionParts;
             try
             {
-                updateInfo = File.ReadAllLines(AppDocsPath + @"version.txt");
+                updateInfo = File.ReadAllLines(App.AppDocsPath + @"version.txt");
                 versionParts = updateInfo[0].Split('.');
                 string[] curVersionParts = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.');
                 var iVP = new int[versionParts.Length];
@@ -1220,5 +1217,7 @@ namespace NBA_2K13_Keep_My_Mod
         {
             Process.Start("notepad", AppPath + @"\LICENSE");
         }
+
+        public static string KMMPath;
     }
 }

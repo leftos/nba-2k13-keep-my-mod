@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBA 2K13 Keep My Mod", "NBA 2K13 Keep My Mod\NBA 2K13 Keep My Mod.csproj", "{6D49F9D9-30ED-43A7-8F9A-D9601CDB2225}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A28438DE-AE9B-470E-A06C-00C49E35449A}"
+	ProjectSection(SolutionItems) = preProject
+		kmm13version.txt = kmm13version.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -10,6 +15,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6D49F9D9-30ED-43A7-8F9A-D9601CDB2225}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D49F9D9-30ED-43A7-8F9A-D9601CDB2225}.Debug|x86.Build.0 = Debug|Any CPU
 		{6D49F9D9-30ED-43A7-8F9A-D9601CDB2225}.Release|x86.ActiveCfg = Release|Any CPU
 		{6D49F9D9-30ED-43A7-8F9A-D9601CDB2225}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection

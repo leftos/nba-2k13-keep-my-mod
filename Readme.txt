@@ -246,16 +246,6 @@ Instructions
 		created the proper modlist file inside the KeepMyMods subfolder. If your
 		mod's files are in the Keep My Mods column, you've done	it correctly.
 
-Version History
-	v0.1.0.2
-		- Fixed bug which launched the NBA 2K12 Steam version instead of 2K13
-
-	v0.1.0.1
-		- Fixed crash when choosing Yes to an overwrite prompt
-
-	v0.1
-		- Initial release
-
 Troubleshooting
 	You can ask me for help whether you're a user or a modder on the tool's 
 	thread in the NBA Live Series Center forums.

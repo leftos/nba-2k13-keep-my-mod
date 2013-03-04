@@ -16,6 +16,8 @@
 
 #endregion
 
+#region Other Information
+
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -57,6 +59,7 @@ using System.Windows;
     // app, or any theme specific resource dictionaries)
     )]
 
+#endregion Other Information
 
 // Version information for an assembly consists of the following four values:
 //
@@ -69,4 +72,4 @@ using System.Windows;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.1.0.2")]
+[assembly: AssemblyVersion("0.1.0.4")]

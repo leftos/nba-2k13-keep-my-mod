@@ -103,19 +103,20 @@ namespace NBA_2K13_Keep_My_Mod
 
         private void saveKeepMods()
         {
+            var kmmPath = MainWindow.KMMPath;
             try
             {
-                Directory.CreateDirectory(MainWindow.KMMPath);
+                Directory.CreateDirectory(kmmPath);
             }
             finally
             {
                 var _list = new string[lstKeep.Items.Count];
                 lstKeep.Items.CopyTo(_list, 0);
-                File.WriteAllLines(MainWindow.KMMPath + "KeepMyMods.modlist", _list);
+                File.WriteAllLines(kmmPath + "KeepMyMods.modlist", _list);
 
                 var _updates = new string[lstUpdates.Items.Count];
                 lstUpdates.Items.CopyTo(_updates, 0);
-                File.WriteAllLines(MainWindow.KMMPath + "AllowUpdates.modlist", _updates);
+                File.WriteAllLines(kmmPath + "AllowUpdates.modlist", _updates);
             }
         }
     }

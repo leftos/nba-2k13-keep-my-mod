@@ -1,1 +1,16 @@
-﻿
+﻿NBA 2K13 Keep My Mod Version History
+
+	v0.1.0.4
+		- Fixed startup crash
+
+	v0.1.0.3
+		- Fixed various minor bugs
+
+	v0.1.0.2
+		- Fixed bug which launched the NBA 2K12 Steam version instead of 2K13
+
+	v0.1.0.1
+		- Fixed crash when choosing Yes to an overwrite prompt
+
+	v0.1
+		- Initial release
