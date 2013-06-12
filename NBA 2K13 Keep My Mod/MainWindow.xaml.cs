@@ -334,7 +334,7 @@ namespace NBA_2K13_Keep_My_Mod
 
             try
             {
-                rk = Registry.CurrentUser;
+                rk = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
             }
             catch (Exception ex)
             {
@@ -364,11 +364,11 @@ namespace NBA_2K13_Keep_My_Mod
 
                 try
                 {
-                    rk2 = Registry.CurrentUser;
+                    rk2 = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
                     rk2 = rk2.OpenSubKey(Tools.AppRegistryKey, true);
                     if (rk2 == null)
                     {
-                        rk2 = Registry.CurrentUser;
+                        rk2 = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
                         rk2.CreateSubKey(Tools.AppRegistryKey);
                         needToSet = true;
                     }
