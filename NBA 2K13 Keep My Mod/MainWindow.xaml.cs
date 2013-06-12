@@ -39,6 +39,7 @@ namespace NBA_2K13_Keep_My_Mod
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string _nba2K13RegistryKey = @"SOFTWARE\2K Sports\NBA 2K13";
         public static MainWindow mwInstance;
         public static bool bootSuccess = false;
         public static string AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\";
@@ -330,110 +331,92 @@ namespace NBA_2K13_Keep_My_Mod
 
         private void getPaths()
         {
-            RegistryKey rk = null;
-
             try
             {
-                rk = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-            }
-            catch (Exception ex)
-            {
-                App.errorReport(ex, "Registry.CurrentUser");
-            }
-            rk = rk.OpenSubKey(@"SOFTWARE\2K Sports\NBA 2K13");
-            if (rk == null)
-            {
-                MessageBox.Show(
-                    "NBA 2K13 doesn't seem to be installed in this computer/for this user.\nThe required registry entries could not be found.");
-                Environment.Exit(-1);
-            }
-
-            try
-            {
-                var installDir = rk.GetValue("Install Dir");
-                if (installDir == null)
+                var installDir = Tools.GetRegistrySetting(_nba2K13RegistryKey, "Install Dir", "");
+                if (String.IsNullOrWhiteSpace(installDir))
                 {
-                    throw new Exception("Registry value not found.");
-                }
-                InstallationPath = installDir + @"\";
-            }
-            catch (Exception ex)
-            {
-                bool needToSet = false;
-                RegistryKey rk2 = null;
-
-                try
-                {
-                    rk2 = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-                    rk2 = rk2.OpenSubKey(Tools.AppRegistryKey, true);
-                    if (rk2 == null)
+                    try
                     {
-                        rk2 = RegistryKey.OpenBaseKey(RegistryHive.CurrentUser, RegistryView.Registry64);
-                        rk2.CreateSubKey(Tools.AppRegistryKey);
-                        needToSet = true;
+                        installDir = Tools.GetRegistrySetting("NBA 2K13 Installation Path", "");
+                        if (String.IsNullOrWhiteSpace(installDir))
+                        {
+                            throw new Exception();
+                        }
                     }
-                    else
+                    catch
                     {
+                        var ofd = new OpenFileDialog();
+                        ofd.Filter = "NBA2K13.exe|nba2K13.exe";
+                        var possibleDirs = new List<string>
+                            {
+                                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + @"\2K Sports\NBA 2K13",
+                                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\2K Sports\NBA 2K13",
+                                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + @"\Steam\steamapps\common\nba 2k13",
+                                Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Steam\steamapps\common\nba 2k13",
+                                @"C:\Games\NBA 2K13",
+                                @"D:\Games\NBA 2K13",
+                                @"E:\Games\NBA 2K13"
+                            };
+                        ofd.InitialDirectory = possibleDirs.FirstOrDefault(Directory.Exists);
+                        ofd.Title = "Please select the 'nba2K13.exe' in the game's installation folder.";
+                        while (true)
+                        {
+                            var result = ofd.ShowDialog();
+                            if (result == false)
+                            {
+                                Environment.Exit(-1);
+                            }
+                            if (ofd.FileName == "")
+                            {
+                                MessageBox.Show(
+                                    "You need to point the tool to the folder you've installed NBA 2K13.\n\n"
+                                    + "It can't work otherwise.\n\nPlease restart the tool and try again.");
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        
+                        string fname = ofd.FileName;
+                        string[] parts2 = fname.Split('\\');
+                        fname = fname.Substring(0, fname.Length - parts2[parts2.Length - 1].Length);
+                        InstallationPath = fname;
                         try
                         {
-                            InstallationPath = rk2.GetValue("NBA 2K13 Installation Path").ToString();
+                            Tools.SetRegistrySetting("NBA 2K13 Installation Path", InstallationPath);
                         }
                         catch
                         {
-                            needToSet = true;
+                            Debug.WriteLine("Couldn't set NBA 2K13 Installation Path in the registry.");
                         }
                     }
-                }
-                catch (Exception ex2)
-                {
-                    App.errorReport(ex2, "Finding installation path of NBA 2K13 through KMM's own entry.");
-                }
-
-                if (needToSet)
-                {
-                    var ofd = new OpenFileDialog();
-                    ofd.Filter = "NBA2K13.exe|nba2K13.exe";
-                    ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) +
-                                           @"\2K Sports\NBA 2K13";
-                    if (ofd.InitialDirectory == "")
-                    {
-                        ofd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                               @"\2K Sports\NBA 2K13";
-                        if (ofd.InitialDirectory == "")
-                        {
-                            string[] parts = Environment.CurrentDirectory.Split('\\');
-                            ofd.InitialDirectory = parts[0] + @"\Games\NBA 2K13";
-                            if (ofd.InitialDirectory == "")
-                            {
-                                ofd.InitialDirectory = parts[0];
-                            }
-                        }
-                    }
-                    ofd.Title = "Please select the 'nba2K13.exe' in the game's installation folder.";
-                    ofd.ShowDialog();
-
-                    if (ofd.FileName == "")
-                    {
-                        MessageBox.Show(
-                            "You need to point the tool to the folder you've installed NBA 2K13.\n\nIt can't work otherwise.\n\nPlease restart the tool and try again.");
-                        rk.Close();
-                        rk2.Close();
-                        Environment.Exit(-1);
-                    }
-
-                    string fname = ofd.FileName;
-                    string[] parts2 = fname.Split('\\');
-                    fname = fname.Substring(0, fname.Length - parts2[parts2.Length - 1].Length);
-                    InstallationPath = fname;
-                    rk2.SetValue("NBA 2K13 Installation Path", InstallationPath);
-                    rk2.Close();
                 }
             }
+            catch
+            {
+                MessageBox.Show(
+                    "NBA 2K13 doesn't seem to be installed in this computer/for this user.\n"
+                    + "The required registry entries could not be found.");
+                Environment.Exit(-1);
+            }
             KMMPath = InstallationPath + @"KeepMyMods\";
-            SavesPath = rk.GetValue("Saves").ToString();
-            SaveRootPath = SavesPath.Substring(0, SavesPath.Length - 6);
-            OnlineDataPath = rk.GetValue("Online Data").ToString();
-            CachePath = rk.GetValue("Cache").ToString();
+            var nba2K13AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                                               @"\2K Sports\NBA 2K13";
+            try
+            {
+                SavesPath = Tools.GetRegistrySetting(_nba2K13RegistryKey, "Saves", nba2K13AppData + @"\Saves");
+                SaveRootPath = SavesPath.Substring(0, SavesPath.Length - 6);
+                OnlineDataPath = Tools.GetRegistrySetting(_nba2K13RegistryKey, "Online Data", nba2K13AppData + @"\Online Data");
+                CachePath = Tools.GetRegistrySetting(_nba2K13RegistryKey, "Cache", nba2K13AppData + @"\Cache");
+            }
+            catch
+            {
+                MessageBox.Show(
+                    "The NBA 2K13 installation seems corrupted. The required registry values could not be found.");
+                Environment.Exit(-1);
+            }
 
             if (Directory.Exists(KMMPath) == false)
             {
@@ -458,8 +441,6 @@ namespace NBA_2K13_Keep_My_Mod
                     App.errorReport(ex, "CreateDirectory cache");
                 }
             }
-
-            rk.Close();
 
             insertInList("Detected Paths");
             insertInList("Installation Path: " + InstallationPath);
